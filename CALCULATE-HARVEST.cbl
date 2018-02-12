@@ -1,6 +1,6 @@
       ******************************************************************
-      * Author: Oscar Brink
-      * Date: 2018-02-12
+      * Author:    Oscar Brink
+      * Date:      2018-02-12
       * Purpose:   Calculates harvest for HAMMURABI-GAME using random
       *            value between 1 and 6.
       * Tectonics: cobc

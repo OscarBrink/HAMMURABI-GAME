@@ -1,7 +1,12 @@
       ******************************************************************
-      * Author: Oscar Brink
-      * Date: 2018-02-11
-      * Purpose:
+      * Author:    Oscar Brink
+      * Date:      2018-02-11
+      * Purpose:   Runs RANDOM once with current time as seed.
+      *            Based entirely on code from:
+      *                https://community.microfocus.com/microfocus/
+      *                cobol/net_express__server_express/w/
+      *                knowledge_base/2294/
+      *                calculating-a-random-number-in-cobol
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
@@ -10,11 +15,8 @@
        DATA DIVISION.
            WORKING-STORAGE SECTION.
                01 WS-RND-SEED-X PIC X(8).
-               01 WS-RND-SEED-9 REDEFINES WS-RND-SEED-X
-                                PIC 9(8).
+               01 WS-RND-SEED-9 REDEFINES WS-RND-SEED-X PIC 9(8).
                01 WS-RND-DBL COMP-2.
-
-           LINKAGE SECTION.
 
        PROCEDURE DIVISION.
            MOVE 32768 TO WS-RND-SEED-9
