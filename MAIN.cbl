@@ -35,6 +35,8 @@
                01 WS-GAME-LOOP PIC A.
                    88 WS-GAME-LOOP-STATE VALUE 'Y'
                       WHEN SET TO FALSE 'N'.
+                   88 WS-MENU-LOOP-STATE VALUE 'Y'
+                      WHEN SET TO FALSE 'N'.
                01 WS-CALC-CHECKS PIC A.
                    88 WS-CALC-VALID VALUE 'Y'
                       WHEN SET TO FALSE 'N'.
@@ -46,6 +48,8 @@
                PERFORM INIT-GAME-STATES
 
                PERFORM 4 TIMES
+                   MOVE WS-YEAR TO WS-FORMAT-YEAR
+                   DISPLAY "It is year "WS-FORMAT-YEAR" of your reign."
 
       *            CALL 'CALCULATE-RATS'
       *                USING
@@ -96,6 +100,7 @@
                    DISPLAY "----------------------"
 
                    COMPUTE WS-PRICE = (FUNCTION RANDOM * 8) + 17
+                   ADD 1 TO WS-YEAR
                END-PERFORM
 
       *        SET WS-GAME-LOOP-STATE TO TRUE
@@ -127,6 +132,7 @@
                IF WS-PLANTED-ACRES > WS-ACRES
                        OR WS-PLANTED-ACRES > WS-WHEAT
                    DISPLAY "Input invalid."
+                   SET WS-CALC-VALID TO FALSE
                ELSE
                    CALL 'CALCULATE-HARVEST'
                        USING
