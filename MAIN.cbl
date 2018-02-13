@@ -19,43 +19,83 @@
                01 WS-FORMAT-YEAR PIC Z9.
 
                01 WS-WHEAT PIC 9(7).
+               01 WS-PLANTED-ACRES PIC 9(7).
+               01 WS-HARVEST PIC 9(7).
 
                01 WS-EATEN-BY-RATS PIC 9(7).
                01 WS-RATS-CHANCE PIC V99 VALUE .90.
 
                01 WS-ACRES PIC 9(7).
+               01 WS-ACRES-BUY-AMOUNT PIC S9(7).
 
                01 WS-PRICE PIC 99.
 
                01 WS-FORMAT-GAME-NUMS PIC Z(6)9.
 
-               01 WS-BOOLEANS PIC A.
+               01 WS-GAME-LOOP PIC A.
                    88 WS-GAME-LOOP-STATE VALUE 'Y'
                       WHEN SET TO FALSE 'N'.
+               01 WS-CALC-CHECKS PIC A.
+                   88 WS-CALC-VALID VALUE 'Y'
+                      WHEN SET TO FALSE 'N'.
+
 
        PROCEDURE DIVISION.
            MAIN.
                DISPLAY "Welcome O Great Hammurabi."
                PERFORM INIT-GAME-STATES
 
-               MOVE 2800 TO WS-WHEAT
+               PERFORM 4 TIMES
 
-               PERFORM 5 TIMES
+      *            CALL 'CALCULATE-RATS'
+      *                USING
+      *                    WS-WHEAT
+      *                    WS-RATS-CHANCE
+      *                    WS-EATEN-BY-RATS
+
                    MOVE WS-WHEAT TO WS-FORMAT-GAME-NUMS
+                   DISPLAY "WS-WHEAT: "WS-FORMAT-GAME-NUMS
+                   DISPLAY "WS-PRICE: "WS-PRICE
+                   DISPLAY "Input WS-ACRES-BUY-AMOUNT: "
+                   ACCEPT WS-ACRES-BUY-AMOUNT
+
+                   DISPLAY "--------------"
+      *            MOVE WS-WHEAT TO WS-FORMAT-GAME-NUMS
                    DISPLAY "PRE WS-WHEAT: "WS-FORMAT-GAME-NUMS
 
-                   CALL 'CALCULATE-RATS'
-                        USING
-                           WS-WHEAT
-                           WS-RATS-CHANCE
-                           WS-EATEN-BY-RATS
+                   MOVE WS-ACRES TO WS-FORMAT-GAME-NUMS
+                   DISPLAY "PRE WS-ACRES: "WS-FORMAT-GAME-NUMS
 
-                   MOVE WS-EATEN-BY-RATS TO WS-FORMAT-GAME-NUMS
-                   DISPLAY "WS-EATEN-BY-RATS: "
-                           WS-FORMAT-GAME-NUMS
+                   DISPLAY "WS-ACRES-BUY-AMOUNT: "WS-ACRES-BUY-AMOUNT
+
+                   CALL 'LAND-TRANSACTION'
+                       USING
+                           WS-PRICE
+                           WS-ACRES-BUY-AMOUNT
+                           WS-WHEAT
+                           WS-ACRES
+                           WS-CALC-CHECKS
+
+                   MOVE WS-WHEAT TO WS-FORMAT-GAME-NUMS
+                   DISPLAY "POS WS-WHEAT: "WS-FORMAT-GAME-NUMS
+
+                   MOVE WS-ACRES TO WS-FORMAT-GAME-NUMS
+                   DISPLAY "POS WS-ACRES: "WS-FORMAT-GAME-NUMS
+
+                   IF WS-CALC-VALID
+                       DISPLAY "OK TRANSACT"
+                   ELSE
+                       DISPLAY "FAIL TRANSACT"
+                   END-IF
+
+      *            MOVE WS-EATEN-BY-RATS TO WS-FORMAT-GAME-NUMS
+      *            DISPLAY "WS-EATEN-BY-RATS: "
+      *                    WS-FORMAT-GAME-NUMS
                    MOVE WS-WHEAT TO WS-FORMAT-GAME-NUMS
                    DISPLAY "POS WS-WHEAT: "WS-FORMAT-GAME-NUMS
                    DISPLAY "----------------------"
+
+                   COMPUTE WS-PRICE = (FUNCTION RANDOM * 8) + 17
                END-PERFORM
 
       *        SET WS-GAME-LOOP-STATE TO TRUE
@@ -65,9 +105,9 @@
       *        MOVE WS-RESULT TO WS-FORM-INT
       *        DISPLAY WS-FORM-INT
 
-               ACCEPT WS-NUMTEST
-               SUBTRACT 15 FROM WS-NUMTEST
-               DISPLAY WS-NUMTEST
+      *        ACCEPT WS-NUMTEST
+      *        SUBTRACT 15 FROM WS-NUMTEST
+      *        DISPLAY WS-NUMTEST
 
            STOP RUN.
 
@@ -78,5 +118,21 @@
                MOVE 1000 TO WS-ACRES
                MOVE 17 TO WS-PRICE
                CALL 'GENERATE-RANDOM-SEED'
+           CONTINUE.
+
+           PLANT-ACRES SECTION.
+               DISPLAY "WS-ACRES: "WS-ACRES
+               DISPLAY "Input WS-PLANTED-ACRES: "
+               ACCEPT WS-PLANTED-ACRES
+               IF WS-PLANTED-ACRES > WS-ACRES
+                       OR WS-PLANTED-ACRES > WS-WHEAT
+                   DISPLAY "Input invalid."
+               ELSE
+                   CALL 'CALCULATE-HARVEST'
+                       USING
+                           WS-PLANTED-ACRES
+                           WS-HARVEST
+                           WS-WHEAT
+               END-IF
            CONTINUE.
        END PROGRAM MAIN.

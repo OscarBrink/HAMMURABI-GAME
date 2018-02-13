@@ -1,34 +1,40 @@
       ******************************************************************
       * Author:    Oscar Brink
-      * Date:      2018-02-12
+      * Date:      2018-02-13
       * Purpose:
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-           PROGRAM-ID. YOUR-PROGRAM.
+           PROGRAM-ID. LAND-TRANSACTION.
        DATA DIVISION.
            WORKING-STORAGE SECTION.
-               01 WS-TRANSACTION-PRICE PIC 9(7).
+               01 WS-TRANSACTION-PRICE PIC S9(7).
            LINKAGE SECTION.
                01 LS-PRICE PIC 99.
                01 LS-AMOUNT PIC S9(7).
                01 LS-WHEAT PIC 9(7).
                01 LS-ACRES PIC 9(7).
-               01 LS-TRANSACTION-VALID PIC A.
+               01 LS-CALC-CHECKS PIC A.
+                   88 LS-CALC-VALID VALUE 'Y'
+                      WHEN SET TO FALSE 'N'.
 
-       PROCEDURE DIVISION.
+       PROCEDURE DIVISION
+       USING LS-PRICE LS-AMOUNT LS-WHEAT LS-ACRES LS-CALC-CHECKS.
+           DISPLAY "LS-AMOUNT: "LS-AMOUNT
            IF LS-AMOUNT > LS-ACRES
-               MOVE 'N' TO LS-TRANSACTION-VALID
+               SET LS-CALC-VALID TO FALSE
                EXIT PROGRAM
            END-IF
 
            COMPUTE WS-TRANSACTION-PRICE = LS-AMOUNT * LS-PRICE
            IF WS-TRANSACTION-PRICE > LS-WHEAT
-               MOVE 'N' TO LS-TRANSACTION-VALID
+               SET LS-CALC-VALID TO FALSE
                EXIT PROGRAM
            END-IF
 
+           DISPLAY "WS-TRANSACTION-PRICE: "WS-TRANSACTION-PRICE
            ADD LS-AMOUNT TO LS-ACRES
            SUBTRACT WS-TRANSACTION-PRICE FROM LS-WHEAT
+           SET LS-CALC-VALID TO TRUE
 
        EXIT PROGRAM.
