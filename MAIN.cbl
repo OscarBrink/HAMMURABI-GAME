@@ -13,14 +13,14 @@
            WORKING-STORAGE SECTION.
                01 WS-RESULT PIC 9(18).
                01 WS-FORM-INT PIC Z(17)9.
-               01 WS-NUMTEST PIC S999.
+               01 WS-NUMTEST PIC S9(2).
 
-               01 WS-CURRENT-YEAR PIC 9(2).
+               01 WS-YEAR PIC 9(2).
                01 WS-FORMAT-YEAR PIC Z9.
 
-               01 WS-CURRENT-WHEAT PIC 9(7).
+               01 WS-WHEAT PIC 9(7).
 
-               01 WS-CURRENT-EATEN-BY-RATS PIC 9(7).
+               01 WS-EATEN-BY-RATS PIC 9(7).
                01 WS-RATS-CHANCE PIC V99 VALUE .90.
 
                01 WS-ACRES PIC 9(7).
@@ -38,23 +38,23 @@
                DISPLAY "Welcome O Great Hammurabi."
                PERFORM INIT-GAME-STATES
 
-               MOVE 2800 TO WS-CURRENT-WHEAT
+               MOVE 2800 TO WS-WHEAT
 
                PERFORM 5 TIMES
-                   MOVE WS-CURRENT-WHEAT TO WS-FORMAT-GAME-NUMS
-                   DISPLAY "PRE WS-CURRENT-WHEAT: "WS-FORMAT-GAME-NUMS
+                   MOVE WS-WHEAT TO WS-FORMAT-GAME-NUMS
+                   DISPLAY "PRE WS-WHEAT: "WS-FORMAT-GAME-NUMS
 
                    CALL 'CALCULATE-RATS'
                         USING
-                           WS-CURRENT-WHEAT
+                           WS-WHEAT
                            WS-RATS-CHANCE
-                           WS-CURRENT-EATEN-BY-RATS
+                           WS-EATEN-BY-RATS
 
-                   MOVE WS-CURRENT-EATEN-BY-RATS TO WS-FORMAT-GAME-NUMS
-                   DISPLAY "WS-CURRENT-EATEN-BY-RATS: "
+                   MOVE WS-EATEN-BY-RATS TO WS-FORMAT-GAME-NUMS
+                   DISPLAY "WS-EATEN-BY-RATS: "
                            WS-FORMAT-GAME-NUMS
-                   MOVE WS-CURRENT-WHEAT TO WS-FORMAT-GAME-NUMS
-                   DISPLAY "POS WS-CURRENT-WHEAT: "WS-FORMAT-GAME-NUMS
+                   MOVE WS-WHEAT TO WS-FORMAT-GAME-NUMS
+                   DISPLAY "POS WS-WHEAT: "WS-FORMAT-GAME-NUMS
                    DISPLAY "----------------------"
                END-PERFORM
 
@@ -72,9 +72,9 @@
            STOP RUN.
 
            INIT-GAME-STATES SECTION.
-               MOVE 2800 TO WS-CURRENT-WHEAT
-               MOVE 200 TO WS-CURRENT-EATEN-BY-RATS
-               MOVE 1 TO WS-CURRENT-YEAR
+               MOVE 2800 TO WS-WHEAT
+               MOVE 200 TO WS-EATEN-BY-RATS
+               MOVE 1 TO WS-YEAR
                MOVE 1000 TO WS-ACRES
                MOVE 17 TO WS-PRICE
                CALL 'GENERATE-RANDOM-SEED'
