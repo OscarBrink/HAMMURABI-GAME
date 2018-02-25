@@ -30,6 +30,9 @@
 
                01 WS-PRICE PIC 99.
 
+               01 WS-POPULATION PIC 9(4).
+               01 WS-FOOD PIC 9(7).
+
                01 WS-FORMAT-GAME-NUMS PIC Z(6)9.
 
                01 WS-GAME-LOOP PIC A.
@@ -99,8 +102,7 @@
                    DISPLAY "POS WS-WHEAT: "WS-FORMAT-GAME-NUMS
                    DISPLAY "----------------------"
 
-                   COMPUTE WS-PRICE = (FUNCTION RANDOM * 8) + 17
-                   ADD 1 TO WS-YEAR
+                   PERFORM END-YEAR
                END-PERFORM
 
       *        SET WS-GAME-LOOP-STATE TO TRUE
@@ -122,13 +124,14 @@
                MOVE 1 TO WS-YEAR
                MOVE 1000 TO WS-ACRES
                MOVE 17 TO WS-PRICE
+               MOVE 100 TO WS-POPULATION
                CALL 'GENERATE-RANDOM-SEED'
            CONTINUE.
 
            PLANT-ACRES SECTION.
                DISPLAY "WS-ACRES: "WS-ACRES
                DISPLAY "Input WS-PLANTED-ACRES: "
-               ACCEPT WS-PLANTED-ACRES
+               ACCEPT WS-PLANTED-ACRES     *> Change this: input in main
                IF WS-PLANTED-ACRES > WS-ACRES
                        OR WS-PLANTED-ACRES > WS-WHEAT
                    DISPLAY "Input invalid."
@@ -140,5 +143,14 @@
                            WS-HARVEST
                            WS-WHEAT
                END-IF
+           CONTINUE.
+
+           END-YEAR SECTION.
+               COMPUTE WS-FOOD = WS-FOOD / 20
+               IF WS-FOOD < (WS-POPULATION)
+                   MOVE WS-FOOD TO WS-POPULATION
+               END-IF
+               COMPUTE WS-PRICE = (FUNCTION RANDOM * 9) + 17
+               ADD 1 TO WS-YEAR
            CONTINUE.
        END PROGRAM MAIN.
