@@ -31,18 +31,22 @@
                01 WS-PRICE PIC 99.
 
                01 WS-POPULATION PIC 9(4).
+               01 WS-PLAGUE-CHANCE PIC V99 VALUE .90.
                01 WS-FOOD PIC 9(7).
 
                01 WS-FORMAT-GAME-NUMS PIC Z(6)9.
 
-               01 WS-GAME-LOOP PIC A.
+               01 WS-GAME-STATES PIC A.
                    88 WS-GAME-LOOP-STATE VALUE 'Y'
                       WHEN SET TO FALSE 'N'.
                    88 WS-MENU-LOOP-STATE VALUE 'Y'
                       WHEN SET TO FALSE 'N'.
-               01 WS-CALC-CHECKS PIC A.
-                   88 WS-CALC-VALID VALUE 'Y'
+                   88 WS-PLAGUE-HAPPENED VALUE 'Y'
                       WHEN SET TO FALSE 'N'.
+               01 WS-MODULE-CHECKS PIC A.
+                   88 WS-MODULE-BOOL VALUE 'Y'
+                      WHEN SET TO FALSE 'N'.
+
 
 
        PROCEDURE DIVISION.
@@ -66,6 +70,8 @@
                    DISPLAY "Input WS-ACRES-BUY-AMOUNT: "
                    ACCEPT WS-ACRES-BUY-AMOUNT
 
+                   DISPLAY "Input WS-FOOD: "
+                   ACCEPT WS-FOOD
                    DISPLAY "--------------"
       *            MOVE WS-WHEAT TO WS-FORMAT-GAME-NUMS
                    DISPLAY "PRE WS-WHEAT: "WS-FORMAT-GAME-NUMS
@@ -81,7 +87,7 @@
                            WS-ACRES-BUY-AMOUNT
                            WS-WHEAT
                            WS-ACRES
-                           WS-CALC-CHECKS
+                           WS-MODULE-CHECKS
 
                    MOVE WS-WHEAT TO WS-FORMAT-GAME-NUMS
                    DISPLAY "POS WS-WHEAT: "WS-FORMAT-GAME-NUMS
@@ -89,7 +95,7 @@
                    MOVE WS-ACRES TO WS-FORMAT-GAME-NUMS
                    DISPLAY "POS WS-ACRES: "WS-FORMAT-GAME-NUMS
 
-                   IF WS-CALC-VALID
+                   IF WS-MODULE-BOOL
                        DISPLAY "OK TRANSACT"
                    ELSE
                        DISPLAY "FAIL TRANSACT"
@@ -135,7 +141,7 @@
                IF WS-PLANTED-ACRES > WS-ACRES
                        OR WS-PLANTED-ACRES > WS-WHEAT
                    DISPLAY "Input invalid."
-                   SET WS-CALC-VALID TO FALSE
+                   SET WS-MODULE-BOOL TO FALSE
                ELSE
                    CALL 'CALCULATE-HARVEST'
                        USING
@@ -146,6 +152,8 @@
            CONTINUE.
 
            END-YEAR SECTION.
+               SUBTRACT WS-FOOD FROM WS-WHEAT
+      *        Calculate starving people.
                COMPUTE WS-FOOD = WS-FOOD / 20
                IF WS-FOOD < (WS-POPULATION)
                    MOVE WS-FOOD TO WS-POPULATION
