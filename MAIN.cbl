@@ -41,12 +41,12 @@
                       WHEN SET TO FALSE 'N'.
                    88 WS-MENU-LOOP-STATE VALUE 'Y'
                       WHEN SET TO FALSE 'N'.
-                   88 WS-PLAGUE-HAPPENED VALUE 'Y'
-                      WHEN SET TO FALSE 'N'.
                01 WS-MODULE-CHECKS PIC A.
                    88 WS-MODULE-BOOL VALUE 'Y'
                       WHEN SET TO FALSE 'N'.
-
+               01 WS-PLAGUE-CHECK PIC A.
+                   88 WS-PLAGUE-HAPPENED VALUE 'Y'
+                      WHEN SET TO FALSE 'N'.
 
 
        PROCEDURE DIVISION.
@@ -57,6 +57,14 @@
                PERFORM 4 TIMES
                    MOVE WS-YEAR TO WS-FORMAT-YEAR
                    DISPLAY "It is year "WS-FORMAT-YEAR" of your reign."
+
+                   IF WS-PLAGUE-HAPPENED
+                       DISPLAY "A terrible plague struck, killing"
+      -                     " half of the population!"
+                   END-IF
+
+                   MOVE WS-POPULATION TO WS-FORMAT-GAME-NUMS
+                   DISPLAY "WS-POPULATION: "WS-FORMAT-GAME-NUMS
 
       *            CALL 'CALCULATE-RATS'
       *                USING
@@ -153,6 +161,9 @@
 
            END-YEAR SECTION.
                SUBTRACT WS-FOOD FROM WS-WHEAT
+      *        Run plague.
+               CALL 'CALCULATE-PLAGUE'
+                   USING WS-POPULATION WS-PLAGUE-CHANCE WS-PLAGUE-CHECK
       *        Calculate starving people.
                COMPUTE WS-FOOD = WS-FOOD / 20
                IF WS-FOOD < (WS-POPULATION)
