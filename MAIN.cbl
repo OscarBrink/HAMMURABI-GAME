@@ -21,6 +21,7 @@
                01 WS-WHEAT PIC 9(7).
                01 WS-PLANTED-ACRES PIC 9(7).
                01 WS-HARVEST PIC 9(7).
+               01 WS-HARVEST-PER-ACRE PIC 9.
 
                01 WS-EATEN-BY-RATS PIC 9(7).
                01 WS-RATS-CHANCE PIC V99 VALUE .90.
@@ -31,7 +32,7 @@
                01 WS-PRICE PIC 99.
 
                01 WS-POPULATION PIC 9(4).
-               01 WS-PLAGUE-CHANCE PIC V99 VALUE .90.
+               01 WS-PLAGUE-CHANCE PIC V99 VALUE .10.
                01 WS-FOOD PIC 9(7).
 
                01 WS-FORMAT-GAME-NUMS PIC Z(6)9.
@@ -80,9 +81,14 @@
 
                    DISPLAY "Input WS-FOOD: "
                    ACCEPT WS-FOOD
+
+                   PERFORM PLANT-ACRES
+                   MOVE WS-HARVEST-PER-ACRE TO WS-FORMAT-GAME-NUMS
+                   DISPLAY "WS-HARVEST-PER-ACRE: "WS-FORMAT-GAME-NUMS
+
                    DISPLAY "--------------"
       *            MOVE WS-WHEAT TO WS-FORMAT-GAME-NUMS
-                   DISPLAY "PRE WS-WHEAT: "WS-FORMAT-GAME-NUMS
+      *            DISPLAY "PRE WS-WHEAT: "WS-FORMAT-GAME-NUMS
 
                    MOVE WS-ACRES TO WS-FORMAT-GAME-NUMS
                    DISPLAY "PRE WS-ACRES: "WS-FORMAT-GAME-NUMS
@@ -156,6 +162,7 @@
                            WS-PLANTED-ACRES
                            WS-HARVEST
                            WS-WHEAT
+                           WS-HARVEST-PER-ACRE
                END-IF
            CONTINUE.
 

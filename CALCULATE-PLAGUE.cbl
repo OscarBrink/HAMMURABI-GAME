@@ -18,6 +18,7 @@
            USING LS-POPULATION LS-PLAGUE-CHANCE LS-PLAGUE-CHECK.
            MAIN-PROCEDURE.
                IF FUNCTION RANDOM < LS-PLAGUE-CHANCE
+                       AND LS-POPULATION > 1
                    COMPUTE LS-POPULATION =
                    LS-POPULATION / 2
                    SET LS-PLAGUE-HAPPENED TO TRUE
