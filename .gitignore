@@ -2,3 +2,9 @@
 
 # Built files
 bin/
+out/
+
+# Vim swaps
+*.swp
+*.swo
+

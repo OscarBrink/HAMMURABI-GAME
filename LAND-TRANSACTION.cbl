@@ -41,3 +41,4 @@
            SET LS-CALC-VALID TO TRUE
 
        EXIT PROGRAM.
+

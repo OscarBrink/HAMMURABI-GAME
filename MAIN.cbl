@@ -55,17 +55,9 @@
                DISPLAY "Welcome O Great Hammurabi."
                PERFORM INIT-GAME-STATES
 
-               PERFORM 4 TIMES
-                   MOVE WS-YEAR TO WS-FORMAT-YEAR
-                   DISPLAY "It is year "WS-FORMAT-YEAR" of your reign."
+               PERFORM 2 TIMES
 
-                   IF WS-PLAGUE-HAPPENED
-                       DISPLAY "A terrible plague struck, killing"
-      -                     " half of the population!"
-                   END-IF
-
-                   MOVE WS-POPULATION TO WS-FORMAT-GAME-NUMS
-                   DISPLAY "WS-POPULATION: "WS-FORMAT-GAME-NUMS
+                   PERFORM PRINT-YEAR-INFO
 
       *            CALL 'CALCULATE-RATS'
       *                USING
@@ -73,9 +65,6 @@
       *                    WS-RATS-CHANCE
       *                    WS-EATEN-BY-RATS
 
-                   MOVE WS-WHEAT TO WS-FORMAT-GAME-NUMS
-                   DISPLAY "WS-WHEAT: "WS-FORMAT-GAME-NUMS
-                   DISPLAY "WS-PRICE: "WS-PRICE
                    DISPLAY "Input WS-ACRES-BUY-AMOUNT: "
                    ACCEPT WS-ACRES-BUY-AMOUNT
 
@@ -148,6 +137,28 @@
                CALL 'GENERATE-RANDOM-SEED'
            CONTINUE.
 
+      *    Prints info about the current year, assuming that
+      *    info has been updated
+           PRINT-YEAR-INFO SECTION.
+      *        Print year
+               MOVE WS-YEAR TO WS-FORMAT-YEAR
+               DISPLAY "It is year "WS-FORMAT-YEAR" of your reign."
+               
+               IF WS-PLAGUE-HAPPENED
+                   DISPLAY "A terrible plague struck, killing"
+      -                 " half of the population!"
+               END-IF
+
+      *        Print population
+               MOVE WS-POPULATION TO WS-FORMAT-GAME-NUMS
+               DISPLAY "WS-POPULATION: "WS-FORMAT-GAME-NUMS
+
+      *        Print wheat and price
+               MOVE WS-WHEAT TO WS-FORMAT-GAME-NUMS
+               DISPLAY "WS-WHEAT: "WS-FORMAT-GAME-NUMS
+               DISPLAY "WS-PRICE: "WS-PRICE
+           CONTINUE.
+
            PLANT-ACRES SECTION.
                DISPLAY "WS-ACRES: "WS-ACRES
                DISPLAY "Input WS-PLANTED-ACRES: "
@@ -176,7 +187,9 @@
                IF WS-FOOD < (WS-POPULATION)
                    MOVE WS-FOOD TO WS-POPULATION
                END-IF
+      *        Generate new market price for land.
                COMPUTE WS-PRICE = (FUNCTION RANDOM * 9) + 17
                ADD 1 TO WS-YEAR
            CONTINUE.
        END PROGRAM MAIN.
+

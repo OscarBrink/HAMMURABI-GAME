@@ -26,3 +26,4 @@
                    SET LS-PLAGUE-HAPPENED TO FALSE
                END-IF
        EXIT PROGRAM.
+
